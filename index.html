@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Assistant</title>
+    style <link rel="stylesheet" href="style.css">
+    script <script src="app.js"></script>   
+   
+</head>
+<body>
+    <div id="app">
+        <!-- Current Page Content Will Be Loaded Here -->
+    </div>
+
+    <script>
+        // Simple router to handle page navigation
+        const routes = {
+            'home': {
+                template: `
+                    <header>
+                        <div class="container">
+                            <nav>
+                                <div class="logo">
+                                    <span class="logo-icon">⚕️</span> Medi<span>Care</span>
+                                </div>
+                                <div class="nav-links">
+                                    <a href="#" onclick="navigateTo('home')">Home</a>
+                                    <a href="#features">Features</a>
+                                    <a href="#about">About</a>
+                                    <a href="#contact">Contact</a>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-outline" onclick="navigateTo('select-login')">Login</button>
+                                </div>
+                            </nav>
+                        </div>
+                    </header>
+                    
+                    <section class="hero">
+                        <div class="container">
+                            <div class="hero-content">
+                                <h1>Your Health, Our Priority</h1>
+                                <p>MediCare Assistant provides a seamless connection between patients and healthcare providers. Schedule appointments, access medical records, and communicate with your healthcare team all in one secure platform.</p>
+                                <div class="btn-group">
+                                    <button class="btn btn-primary" onclick="navigateTo('patient-login')">Patient Login</button>
+                                    <button class="btn btn-secondary" onclick="navigateTo('staff-login')">Staff Login</button>
+                                </div>
+                            </div>
+                            <div class="hero-image">
+                                <img src="/api/placeholder/500/400" alt="Healthcare illustration">
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <section id="features" class="features">
+                        <div class="container">
+                            <div class="section-header">
+                                <h2>Our Features</h2>
+                                <p>Discover how MediCare Assistant is revolutionizing healthcare management</p>
+                            </div>
+                            <div class="features-grid">
+                                <div class="feature-card">
+                                    <div class="feature-icon">📅</div>
+                                    <h3>Easy Appointment Scheduling</h3>
+                                    <p>Book, reschedule, or cancel appointments with just a few clicks. Receive automated reminders to ensure you never miss an appointment.</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">📋</div>
+                                    <h3>Medical Records Access</h3>
+                                    <p>Securely access your medical history, test results, and prescription information anytime, anywhere.</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">💬</div>
+                                    <h3>Secure Messaging</h3>
+                                    <p>Communicate directly with your healthcare providers through our encrypted messaging system.</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">📊</div>
+                                    <h3>Health Analytics</h3>
+                                    <p>Track your health metrics and view personalized insights to better manage your wellness journey.</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">💊</div>
+                                    <h3>Medication Management</h3>
+                                    <p>Set medication reminders and easily request prescription refills from your pharmacy.</p>
+                                </div>
+                                <div class="feature-card">
+                                    <div class="feature-icon">🔒</div>
+                                    <h3>Secure & Compliant</h3>
+                                    <p>Our platform adheres to the highest security standards to protect your sensitive health information.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <footer>
+                        <div class="container">
+                            <div class="footer-content">
+                                <div class="footer-column">
+                                    <h4>MediCare Assistant</h4>
+                                    <p>Transforming healthcare management for patients and providers alike.</p>
+                                </div>
+                                <div class="footer-column">
+                                    <h4>Quick Links</h4>
+                                    <ul class="footer-links">
+                                        <li><a href="#" onclick="navigateTo('home')">Home</a></li>
+                                        <li><a href="#features">Features</a></li>
+                                        <li><a href="#about">About Us</a></li>
+                                        <li><a href="#contact">Contact</a></li>
+                                    </ul>
+                                </div>
+                                <div class="footer-column">
+                                    <h4>Login</h4>
+                                    <ul class="footer-links">
+                                        <li><a href="#" onclick="navigateTo('patient-login')">Patient Portal</a></li>
+                                        <li><a href="#" onclick="navigateTo('staff-login')">Staff Portal</a></li>
+                                    </ul>
+                                </div>
+                                <div class="footer-column">
+                                    <h4>Legal</h4>
+                                    <ul class="footer-links">
+                                        <li><a href="#">Privacy Policy</a></li>
+                                        <li><a href="#">Terms of Service</a></li>
+                                        <li><a href="#">HIPAA Compliance</a></li>
+                                        </ul>
+                                </div>
+                            </div>
+                            <div class="copyright">
+                                <p>&copy; 2025 MediCare Assistant. All rights reserved.</p>
+                            </div>
+                        </div>
+                    </footer>
+                `
+            },
+                                       
+           'select-login': {
+                template: `
+                    <header>
+                        <div class="container">
+                            <nav>
+                                <div class="logo">
+                                    <span class="logo-icon">⚕️</span> Medi<span>Care</span>
+                                </div>
+                                <div class="nav-links">
+                                    <a href="#" onclick="navigateTo('home')">Home</a>
+                                </div>
+                            </nav>
+                        </div>
+                    </header>
+                    
+                    <section class="login-selection">
+                        <div class="container">
+                            <div class="section-header">
+                                <h2>Select Login Type</h2>
+                                <p>Please select the appropriate portal for your role</p>
+                            </div>
+                            <div class="login-selection">
+                                <div class="login-option">
+                                    <div class="login-option-icon">👤</div>
+                                    <h3>Patient Portal</h3>
+                                    <p>Access your medical records, appointments, and communicate with your healthcare team.</p>
+                                    <button class="btn btn-primary" onclick="navigateTo('patient-login')">Patient Login</button>
+                                </div>
+                                <div class="login-option">
+                                    <div class="login-option-icon">👨‍⚕️</div>
+                                    <h3>Staff Portal</h3>
+                                    <p>For doctors, nurses, and administrative staff to manage patient care and operations.</p>
+                                    <button class="btn btn-secondary" onclick="navigateTo('staff-login')">Staff Login</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <footer>
+                        <div class="container">
+                            <div class="copyright">
+                                <p>&copy; 2025 MediCare Assistant. All rights reserved.</p>
+                            </div>
+                        </div>
+                    </footer>
+                `
+            },
+            'patient-login': {
+                template: `
+                    <div class="login-container">
+                        <div class="login-card">
+                            <div class="login-header">
+                                <div class="logo" style="justify-content: center;">
+                                    <span class="logo-icon">⚕️</span> Medi<span>Care</span>
+                                </div>
+                                <h2>Patient Portal</h2>
+                                <p>Sign in to access your medical account</p>
+                            </div>
+                            <form class="login-form" onsubmit="simulatePatientLogin(event)">
+                                <div class="form-group">
+                                    <label for="patient-email">Email or Patient ID</label>
+                                    <input type="text" id="patient-email" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="patient-password">Password</label>
+                                    <input type="password" id="patient-password" class="form-control" required>
+                                    <div class="forgot-password">
+                                        <a href="#">Forgot Password?</a>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Sign In</button>
+                            </form>
+                            <div class="login-footer">
+                                <p>Don't have an account? <a href="#">Register</a></p>
+                                <div class="switch-login">
+                                    <a href="#" onclick="navigateTo('staff-login')">Go to Staff Login</a>
+                                </div>
+                                <div class="switch-login">
+                                    <a href="#" onclick="navigateTo('home')">Back to Home</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            'staff-login': {
+                template: `
+                    <div class="login-container">
+                        <div class="login-card">
+                            <div class="login-header">
+                                <div class="logo" style="justify-content: center;">
+                                    <span class="logo-icon">⚕️</span> Medi<span>Care</span>
+                                </div>
+                                <h2>Staff Portal</h2>
+                                <p>Sign in to access the healthcare management system</p>
+                            </div>
+                            <form class="login-form" onsubmit="simulateStaffLogin(event)">
+                                <div class="form-group">
+                                    <label for="staff-email">Email or Staff ID</label>
+                                    <input type="text" id="staff-email" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="staff-password">Password</label>
+                                    <input type="password" id="staff-password" class="form-control" required>
+                                    <div class="forgot-password">
+                                        <a href="#">Forgot Password?</a>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-secondary">Sign In</button>
+                            </form>
+                            <div class="login-footer">
+                                <p>Need help? <a href="#">Contact IT Support</a></p>
+                                <div class="switch-login">
+                                    <a href="#" onclick="navigateTo('patient-login')">Go to Patient Login</a>
+                                </div>
+                                <div class="switch-login">
+                                    <a href="#" onclick="navigateTo('home')">Back to Home</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            'patient-dashboard': {
+                template: `
+                    <div class="dashboard-header">
+                        <div class="container">
+                            <div class="dashboard-nav">
+                                <div class="logo">
+                                    <span class="logo-icon">⚕️</span> Medi<span>Care</span>
+                                </div>
+                                <div class="dashboard-nav-links">
+                                    <a href="#" class="active">Dashboard</a>
+                                    <a href="#">Appointments</a>
+                                    <a href="#">Medical Records</a>
+                                    <a href="#">Prescriptions</a>
+                                    <a href="#">Messages</a>
+                                </div>
+                                <div class="user-info">
+                                    <div class="user-avatar">JD</div>
+                                    <span>John Doe</span>
+                                    <button class="btn btn-outline btn-small" onclick="navigateTo('patient-login')">Logout</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="main-content">
+                        <div class="container">
+                            <div class="dashboard-content">
+                                <div class="sidebar">
+                                    <ul class="sidebar-menu">
+                                        <li><a href="#" class="active">📊 Overview</a></li>
+                                        <li><a href="#">📅 My Appointments</a></li>
+                                        <li><a href="#">📋 Medical Records</a></li>
+                                        <li><a href="#">💊 Prescriptions</a></li>
+                                        <li><a href="#">📱 Telemedicine</a></li>
+                                        <li><a href="#">💬 Messages</a></li>
+                                        <li><a href="#">⚙️ Settings</a></li>
+                                    </ul>
+                                </div>
+                                <div class="dashboard-main">
+                                    <h2>Welcome, John</h2>
+                                    <p>Here's an overview of your health information</p>
+                                    
+                                    <div class="dashboard-cards">
+                                        <div class="dashboard-card">
+                                            <div class="dashboard-card-header">
+                                                <div class="dashboard-card-title">Upcoming Appointments</div>
+                                                <div class="dashboard-card-icon">📅</div>
+                                            </div>
+                                            <div class="dashboard-card-value">2</div>
+                                            <div class="dashboard-card-footer">Next: Dr. Smith - Mar 20</div>
+                                        </div>
+                                        <div class="dashboard-card">
+                                            <div class="dashboard-card-header">
+                                                <div class="dashboard-card-title">Active Prescriptions</div>
+                                                <div class="dashboard-card-icon">💊</div>
+                                            </div>
+                                            <div class="dashboard-card-value">3</div>
+                                            <div class="dashboard-card-footer">Refill needed soon</div>
+                                        </div>
+                                        <div class="dashboard-card">
+                                            <div class="dashboard-card-header">
+                                                <div class="dashboard-card-title">Unread Messages</div>
+                                                <div class="dashboard-card-icon">💬</div>
+                                            </div>
+                                            <div class="dashboard-card-value">1</div>
+                                            <div class="dashboard-card-footer">From: Dr. Johnson</div>
+                                        </div>
+                                        <div class="dashboard-card">
+                                            <div class="dashboard-card-header">
+                                                <div class="dashboard-card-title">Test Results</div>
+                                                <div class="dashboard-card-icon">📋</div>
+                                            </div>
+                                            <div class="dashboard-card-value">New</div>
+                                            <div class="dashboard-card-footer">Blood work - Mar 10</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <h3>Upcoming Appointments</h3>
+                                    <ul class="appointments-list">
+                                        <li class="appointment-item">
+                                            <div class="appointment-info">
+                                                <div class="appointment-date">
+                                                    <div class="appointment-date-day">20</div>
+                                                    <div class="appointment-date-month">MAR</div>
+                                                </div>
+                                                <div class="appointment-details">
+                                                    <h4>Cardiology Checkup</h4>
+                                                    <p>Dr. Sarah Smith • 10:30 AM</p>
+                                                    <p>Memorial Medical Center, Room 305</p>
+                                                </div>
+                                            </div>
+                                            <div class="appointment-actions">
+                                                <button class="btn btn-outline btn-small">Reschedule</button>
+                                                <button class="btn btn-primary btn-small">Start Telemedicine</button>
+                                            </div>
+                                        </li>
+                                        <li class="appointment-item">
+                                            <div class="appointment-info">
+                                                <div class="appointment-date">
+                                                    <div class="appointment-date-day">28</div>
+                                                    <div class="appointment-date-month">MAR</div>
+                                                </div>
+                                                <div class="appointment-details">
+                                                    <h4>Annual Physical</h4>
+                                                    <p>Dr. Michael Johnson • 9:00 AM</p>
+                                                    <p>Primary Care Clinic, Room 112</p>
+                                                </div>
+                                            </div>
+                                            <div class="appointment-actions">
+                                                <button class="btn btn-outline btn-small">Reschedule</button>
+                                                <button class="btn btn-primary btn-small">Directions</button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    
+                                    <div style="text-align: center; margin-top: 1rem;">
+                                        <button class="btn btn-primary">Schedule New Appointment</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            'staff-dashboard': {
+                template: `
+                    <div class="dashboard-header">
+                        <div class="container">
+                            <div class="dashboard-nav">
+                                <div class="logo">
+                                    <span class="logo-icon">⚕️</span> Medi<span>Care</span>
+                                </div>
+                                <div class="dashboard-nav-links">
+                                    <a href="#" class="active">Dashboard</a>
+                                    <a href="#">Schedule</a>
+                                    <a href="#">Patients</a>
+                                    <a href="#">Records</a>
+                                    <a href="#">Prescriptions</a>
+                                    <a href="#">Reports</a>
+                                </div>
+                                <div class="user-info">
+                                    <div class="user-avatar">DS</div>
+                                    <span>Dr. Smith</span>
+                                    <button class="btn btn-outline btn-small" onclick="navigateTo('staff-login')">Logout</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="main-content">
+                        <div class="container">
+                            <div class="dashboard-content">
+                                <div class="sidebar">
+                                    <ul class="sidebar-menu">
+                                        <li><a href="#" class="active">📊 Overview</a></li>
+                                        <li><a href="#">📅 My Schedule</a></li>
+                                        <li><a href="#">👥 Patient List</a></li>
+                                        <li><a href="#">📋 Medical Records</a></li>
+                                        <li><a href="#">💊 Prescriptions</a></li>
+                                        <li><a href="#">📱 Telemedicine</a></li>
+                                        <li><a href="#">📝 Notes</a></li>
+                                        <li><a href="#">⚙️ Settings</a></li>
+                                    </ul>
+                                </div>
+                                <div class="dashboard-main">
+                                    <h2>Staff Dashboard</h2>
+                                    <p>Welcome back, Dr. Smith</p>
+                                    
+                                    <div class="dashboard-cards">
+                                        <div class="dashboard-card">
+                                            <div class="dashboard-card-header">
+                                                <div class="dashboard-card-title">Today's Appointments</div>
+                                                <div class="dashboard-card-icon">📅</div>
+                                            </div>
+                                            <div class="dashboard-card-value">8</div>
+                                            <div class="dashboard-card-footer">Next: John Doe - 10:30 AM</div>
+                                        </div>
+                                        <div class="dashboard-card">
+                                            <div
