@@ -2,9 +2,8 @@ import firebase_admin
 from firebase_admin import credentials, db
 from worker_db import task_queue  # Assuming task_queue is defined in worker_db
 from photo_comparator import PhotoComparator
-import time
-import datetime
 import queue
+import ard_connect
 
 # ✅ Prevent multiple initializations
 if not firebase_admin._apps:
@@ -58,10 +57,11 @@ class MedicalRecords:
                 print("⚠️ No patients found!")
         task_queue.put(task)
         
+    # Patient data retrieval function
     def get_patients_withPid(self, P_id):
         result_queue = queue.Queue()
+
         def task():
-            
             patients = self.ref.get()
             if patients:
                 for key, data in patients.items():
@@ -82,6 +82,19 @@ class MedicalRecords:
             print(f"💊 Medicines: {', '.join(result.get('Medicines', []))}")
             print(f"⏰ Medicine Time: {', '.join(result.get('time_medicines', []))}")
             print(f"✅ Medicine Taken: {'Yes' if result.get('Medicine_taken', False) else 'No'}")
+
+            print("📡 trying to Send info to microcontroller...")
+            
+            check_con =ard_connect.is_serial_connected()
+            if check_con == True:
+                print("✅ Arduino connected")
+                ard_connect.send_patient_data(
+                    result['P_id'], result['pat_name'], result.get('age', 'N/A'),
+                    result['medical_cond'], result.get('Medicines', []),
+                    result.get('time_medicines', []), result.get('Medicine_taken', False)
+                )
+            else:
+                print("❌ Error: Arduino (COM4) not connected. Please check the connection.")
         else:
             print("⚠️ No patient found with the given ID.")
 

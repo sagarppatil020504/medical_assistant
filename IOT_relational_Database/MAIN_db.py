@@ -1,6 +1,5 @@
 import queue
 import connector_reco_db
-import patient_db
 
 # Global task queue (if used by worker_db, otherwise remove if not needed)
 task_queue = queue.Queue()
@@ -15,10 +14,8 @@ def main():
 
         if choice == "1":
             print("Press 'q' to exit")
-            face_con = connector_reco_db.face_recognition()  # Ensure this is the correct class name in your module
-            pat = patient_db.MedicalRecords()
-            details = pat.get_patients_withPid(face_con)
-            print(details)
+            connector_reco_db.face_recognition()  # Ensure this is the correct class name in your module
+            
 
         elif choice == "2":
             password = input("Enter password: ").strip()

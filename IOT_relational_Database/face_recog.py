@@ -75,7 +75,7 @@ class FaceRecog:
         
 
         return frame, face_names,face_locations
-
+        
     def main(self):
         """Run face recognition in a loop until 'q' is pressed."""
         if not self.load_known_faces():
@@ -87,6 +87,7 @@ class FaceRecog:
 
         prev_time = time.time()
         process_this_frame = True
+        processed_faces = set()  # Store processed faces across frames
 
         try:
             while True:
@@ -96,28 +97,24 @@ class FaceRecog:
 
                 current_time = time.time()
                 elapsed_time = current_time - prev_time
-                if elapsed_time > 0:
-                    fps = 1 / elapsed_time
-                else:
-                    fps = 0
+                fps = 1 / elapsed_time if elapsed_time > 0 else 0
                 prev_time = current_time
-                # Track already processed IDs
-                processed_faces = set()
-                
+
                 if process_this_frame:
-                    frame, face_names,face_locations = self.process_frame(frame)
-                    
-                    pat = patient_db.MedicalRecords()  # Initialize outside the loop for efficiency
-                    
+                    frame, face_names, face_locations = self.process_frame(frame)
+
+                    pat = patient_db.MedicalRecords()  # Initialize once per frame
+
                     for id_face in face_names:
                         if id_face not in processed_faces:  # Only process new faces
                             print(f"Processing ID: {id_face}")
                             pat.get_patients_withPid(id_face)
-                            processed_faces.add(id_face)  # Mark as processed
+                            processed_faces.add(id_face)  # Add to processed set
                         else:
-                            print(f"Skipping already processed ID: {id_face}")        
-                process_this_frame = not process_this_frame
-                
+                            print(f"Skipping already processed ID: {id_face}")
+
+                process_this_frame = not process_this_frame  # Skip alternate frames
+
                 scale_factor = 0.5
                 scale_back = int(1 / scale_factor)
                 for (top, right, bottom, left), name in zip(face_locations, face_names):
@@ -127,22 +124,28 @@ class FaceRecog:
                     left *= scale_back
                     cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 150), 2)
                     cv2.putText(frame, name, (left, top - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 150), 2)
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 150), 2)
                 cv2.putText(frame, f"FPS: {fps:.2f}", (10, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
                 cv2.imshow("Real-Time Face Recognition", frame)
 
-                # Small sleep to prevent CPU overuse and ZeroDivisionError
-                time.sleep(0.001)
+                time.sleep(0.001)  # Prevent CPU overload
 
-                if cv2.waitKey(1) & 0xFF == ord('q'):
+                key = cv2.waitKey(1) & 0xFF
+
+                if key == ord('q'):  # Quit
                     break
+                elif key == ord('r'):  # Reset face processing
+                    print("🔄 Resetting processed faces...")
+                    processed_faces.clear()  # Clear stored IDs for reprocessing
+
         except KeyboardInterrupt:
             print("\n⏹️ Stopped by user (Ctrl+C).")
         finally:
             self.video_capture.release()
             cv2.destroyAllWindows()
             print("🛑 Webcam closed. Exiting.")
+
 
 if __name__ == "__main__":
     FaceRecog().main()
