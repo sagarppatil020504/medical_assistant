@@ -1,4 +1,3 @@
-import patient_db
 import cv2
 import os
 

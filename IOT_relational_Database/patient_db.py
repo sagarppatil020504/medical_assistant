@@ -53,30 +53,38 @@ class MedicalRecords:
             if patients:
                 print("\n📋 List of Patients:")
                 for key, data in patients.items():
-                    print(f"🆔 {data['P_id']} | Name: {data['pat_name']} | Condition: {data['medical_cond']}")
+                    print(f"🆔 {data['P_id']} | Name: {data['pat_name']} | Condition: {data['medical_cond']},Medicines:{data['Medicines']},time_medicines:{data['time_medicines']},Medicine_taken:{data['Medicine_taken']}")
             else:
                 print("⚠️ No patients found!")
         task_queue.put(task)
         
     def get_patients_withPid(self, P_id):
+        result_queue = queue.Queue()
         def task():
+            
             patients = self.ref.get()
             if patients:
                 for key, data in patients.items():
                     if data.get('P_id') == P_id:
-                        print("\n📋 Patient Details:")
-                        print(f"🆔 Patient ID: {data['P_id']}")
-                        print(f"👤 Name: {data['pat_name']}")
-                        print(f"🔢 Age: {data.get('age', 'N/A')}")
-                        print(f"🩺 Condition: {data['medical_cond']}")
-                        print(f"💊 Medicines: {', '.join(data.get('Medicines', []))}")
-                        print(f"⏰ Medicine Time: {', '.join(data.get('time_medicines', []))}")
-                        print(f"✅ Medicine Taken: {'Yes' if data.get('Medicine_taken', False) else 'No'}")
+                        result_queue.put(data)  # Store result in the queue
                         return
-                print("⚠️ No patient found with the given ID.")
-            else:
-                print("⚠️ No patients available in the database!")
+            result_queue.put(None)  # No patient found
+
         task_queue.put(task)
+        result = result_queue.get()  # Wait for the task to complete
+
+        if result:
+            print("\n📋 Patient Details:")
+            print(f"🆔 Patient ID: {result['P_id']}")
+            print(f"👤 Name: {result['pat_name']}")
+            print(f"🔢 Age: {result.get('age', 'N/A')}")
+            print(f"🩺 Condition: {result['medical_cond']}")
+            print(f"💊 Medicines: {', '.join(result.get('Medicines', []))}")
+            print(f"⏰ Medicine Time: {', '.join(result.get('time_medicines', []))}")
+            print(f"✅ Medicine Taken: {'Yes' if result.get('Medicine_taken', False) else 'No'}")
+        else:
+            print("⚠️ No patient found with the given ID.")
+
 
     # 🔹 UPDATE (Modify Patient Data)
     def update_patient(self, P_id, updated_data):
@@ -108,29 +116,5 @@ class MedicalRecords:
 #     records = MedicalRecords()
 
 #     # Example: Adding a new patient
-#     pat_name = input("👤 Enter patient name: ").strip()
-#     add_photo = input("📷 Would you like to add a patient photo? (y/n): ").strip().lower()
-#     photo_path = ""
-
-#     # Generate a unique patient ID using first 3 letters of name and timestamp.
-#     secrete_pid = datetime.datetime.now()
-#     P_id = pat_name[:3] + secrete_pid.strftime("%Y%m%d%H%M%S")
-#     print(f"🆔 Generated Patient ID: {P_id}")
-
-#     # If photo capture is desired, capture the photo (photo processing is handled by PhotoComparator)
-#     if add_photo == "y":
-#         print("📸 Capturing photo...")
-#         # Call your photo capture function here; for example, cap_photo(P_id)
-#         # Assuming cap_photo(P_id) captures and saves a photo locally.
-#         cap_photo(P_id)  # This function should capture and save the image in the expected folder.
-#         # For record creation, we don't store the photo URL.
-#         photo_path = f"IOT_relational_Database/patient_photos/{P_id}.jpg"
-
-#     age = input("🔢 Enter age: ").strip()
-#     medical_cond = input("🩺 Enter medical condition: ").strip()
-#     Medicines = input("💊 Enter medicines (comma separated): ").split(',')
-#     time_medicines = input("⏰ Enter time for medicines (comma separated): ").split(',')
-#     Medicine_taken = input("✅ Is medicine taken? (yes/no): ").strip().lower() == "yes"
-
-#     # Add the patient record (without storing the photo URL)
-#     records.add_patient(P_id, pat_name, age, medical_cond, Medicines, time_medicines, Medicine_taken, photo_path)
+#     records.get_patients_withPid("sag20250318181345")
+    

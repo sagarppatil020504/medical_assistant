@@ -19,7 +19,7 @@ task_queue = queue.Queue()
 
 # 🔹 Face Recognition Function
 def face_recognition():
-    fr = face_recog.face_recog()
+    fr = face_recog.FaceRecog()
     fr.main()
     return fr
 
