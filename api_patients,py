@@ -6,7 +6,7 @@ import threading
 app = Flask(__name__)
 
 # Firebase Realtime Database URL
-FIREBASE_URL = "https://vishwas-patra-default-rtdb.asia-southeast1.firebasedatabase.app"
+FIREBASE_URL = "https://vishwas-patra-default-rtdb.asia-southeast1.firebasedatabase.app/"
 
 # Queue for async processing
 task_queue = queue.Queue()

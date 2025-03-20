@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
     if (!patientId) {
         alert("No Patient ID found. Please log in first.");
-        window.location.href = "login.html"; // Redirect to login if no P_id found
+        window.location.href = "dual_login.html"; // Redirect to login if no P_id found
         return;
     }
     if (!patientId) {
