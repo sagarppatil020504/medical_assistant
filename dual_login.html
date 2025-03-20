@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MediCare Hospital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: #3498db;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #3498db;
+        }
+        
+        /* Login Container */
+        .login-container {
+            flex: 1;
+            display: flex;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        /* Login Options */
+        .login-options {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #2c3e50;
+            color: white;
+            padding: 2rem;
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .login-options h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #ffffff;
+        }
+        
+        .option-btn {
+            width: 100%;
+            max-width: 250px;
+            padding: 15px;
+            margin: 10px 0;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .option-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Login Forms */
+        .login-forms {
+            flex: 2;
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .form-title {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .form-title h2 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-title p {
+            color: #7f8c8d;
+        }
+        
+        .login-form {
+            display: none;
+        }
+        
+        .login-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .forgot-password a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .login-options {
+                border-radius: 8px 8px 0 0;
+                padding: 1.5rem;
+            }
+            
+            .login-forms {
+                border-radius: 0 0 8px 8px;
+                padding: 1.5rem;
+            }
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">Medi<span>Care</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Doctors</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Login Container -->
+    <section class="login-container">
+        <!-- Login Options -->
+        <div class="login-options">
+            <h2>Login Portal</h2>
+            <button id="userBtn" class="option-btn active">Patient Login</button>
+            <button id="staffBtn" class="option-btn">Staff Login</button>
+        </div>
+        
+        <!-- Login Forms -->
+        <div class="login-forms">
+            <!-- Patient Login Form -->
+            <div id="userForm" class="login-form active">
+                <div class="form-title">
+                    <h2>Patient Login</h2>
+                    <p>Enter your Patient ID and age to access your records</p>
+                </div>
+                <form id="patientLoginForm">
+                    <div class="form-group">
+                        <label for="patientId">Patient ID</label>
+                        <input type="text" id="patientId" class="form-control" placeholder="Enter your Patient ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="patientAge">Age</label>
+                        <input type="string" id="patientAge" class="form-control" placeholder="Enter your age" required>
+                        <div id="patient-error-message" class="error-message">Invalid Patient ID or Age</div>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                </form>
+                <div class="forgot-password">
+                    <a href="#">Forgot Patient ID?</a>
+                </div>
+            </div>
+            
+            <!-- Staff Login Form -->
+            <div id="staffForm" class="login-form">
+                <div class="form-title">
+                    <h2>Staff Login</h2>
+                    <p>Enter your credentials to access the system</p>
+                </div>
+                <form id="staffLoginForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="form-control" placeholder="Enter your username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                        <div id="staff-error-message" class="error-message">Invalid username or password</div>
+                    </div>
+                    <button type="submit" class="btn">Login</button>
+                </form>
+                <div class="forgot-password">
+                    <a href="#">Forgot password?</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 MediCare Hospital. All rights reserved.</p>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Toggle between login forms
+        const userBtn = document.getElementById('userBtn');
+        const staffBtn = document.getElementById('staffBtn');
+        const userForm = document.getElementById('userForm');
+        const staffForm = document.getElementById('staffForm');
+        
+        userBtn.addEventListener('click', function() {
+            userBtn.classList.add('active');
+            staffBtn.classList.remove('active');
+            userForm.classList.add('active');
+            staffForm.classList.remove('active');
+        });
+        
+        staffBtn.addEventListener('click', function() {
+            staffBtn.classList.add('active');
+            userBtn.classList.remove('active');
+            staffForm.classList.add('active');
+            userForm.classList.remove('active');
+        });
+        
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxl02vves6dluwcqKGuKNq9f9Sgkszbb8",
+            authDomain: "vishwas-patra.firebaseapp.com",
+            databaseURL: "https://vishwas-patra-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "vishwas-patra",
+            storageBucket: "vishwas-patra.firebasestorage.app",
+            messagingSenderId: "276926459600",
+            appId: "1:276926459600:web:d773473ad7a5152076b8d5",
+            measurementId: "G-830Q37LQ11"
+        };
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        
+        // Get references to auth and firestore
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        // Handle staff login form submission
+        document.getElementById('staffLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('staff-error-message');
+            
+            // In a real application, you'd want to use email for Firebase Auth
+            // Here we're using username, but you might need to adapt this
+            const email = username + "@hospital.com"; // This is just a workaround
+            
+            // Sign in with email and password
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    // Signed in successfully
+                    const user = userCredential.user;
+                    console.log("Staff logged in:", user.email);
+                    
+                    // Check if user is staff in Firestore
+                    db.collection('staff').doc(user.uid).get()
+                        .then((doc) => {
+                            if (doc.exists) {
+                                // Redirect to staff dashboard
+                                window.location.href = 'staff_page.html';
+                            } else {
+                                // Not a staff member
+                                errorMessage.style.display = 'block';
+                                auth.signOut();
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error checking staff status:", error);
+                            errorMessage.style.display = 'block';
+                        });
+                })
+                .catch((error) => {
+                    // Handle errors
+                    console.error("Login error:", error.code, error.message);
+                    errorMessage.style.display = 'block';
+                });
+        });
+        
+        // Handle patient login form submission
+        document.getElementById('patientLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const patientId = document.getElementById('patientId').value;
+            const patientAge = document.getElementById('patientAge').value;
+            const errorMessage = document.getElementById('patient-error-message');
+            
+            // Query Firestore for the patient
+            db.collection('patients')
+                .where('P_id', '==', patientId)
+                .where('age', '==', parseInt(patientAge))
+                .get()
+                .then((querySnapshot) => {
+                    alert('P_id')
+                    if (!querySnapshot.empty) {
+                        // Patient found
+                        alert("hehehe")
+                        const patientDoc = querySnapshot.docs[0];
+                        console.log("Patient logged in:", patientDoc.id);
+                        
+                        alert("hehehe")
+                        // Store patient ID in session storage
+                        sessionStorage.setItem('P_id', patientDoc.id);
+                        
+                        // Redirect to patient portal
+                        window.location.href = 'patient_page.html';
+                    } else {
+                        // Patient not found
+                        errorMessage.style.display = 'block';
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error checking patient credentials:", error);
+                    errorMessage.style.display = 'block';
+                });
+        });
+        
+        // Check if staff is already logged in
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // Check if user is staff
+                db.collection('staff').doc(user.uid).get()
+                    .then((doc) => {
+                        if (doc.exists) {
+                            // Redirect to staff dashboard
+                            window.location.href = 'staff_page.html';
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error checking staff status:", error);
+                    });
+            }
+        });
+    </script>
+</body>
+</html>

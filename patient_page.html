@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediCare Portal - Patient Dashboard</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            display: flex;
+            margin-top: 20px;
+            min-height: calc(100vh - 80px);
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 20px 0;
+        }
+        
+        .nav-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background-color: #f0f5ff;
+        }
+        
+        .nav-item.active {
+            background-color: #e6f0ff;
+            color: #2980b9;
+            border-left: 4px solid #2980b9;
+        }
+        
+        /* Dashboard Styles */
+        .dashboard {
+            flex: 1;
+            margin-left: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .dashboard-title {
+            font-size: 24px;
+            color: #2c3e50;
+        }
+        
+        .schedule-btn {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .schedule-btn:hover {
+            background-color: #3498db;
+        }
+        
+        /* Patient Details Styles */
+        .patient-details {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        .detail-section {
+            background-color: #f9fafc;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .detail-label {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        .detail-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        /* Loading State */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            font-size: 18px;
+            color: #7f8c8d;
+        }
+        
+        /* Alert Messages */
+        .alert {
+            padding: 15px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        
+        /* Medicine Status */
+        .status-pill {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .status-true {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .status-false {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">MediCare Portal</div>
+                <div class="user-info">
+                    <div class="user-avatar" id="userInitials">--</div>
+                    <span id="userName">Loading...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="nav-item active">Medical Details</div>
+                <div class="nav-item">Appointments</div>
+                <div class="nav-item">Prescriptions</div>
+                <div class="nav-item">Lab Results</div>
+                <div class="nav-item">Messages</div>
+                <div class="nav-item">Settings</div>
+            </div>
+            
+            <div class="dashboard">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Patient Medical Details</h1>
+                    <button class="schedule-btn" id="scheduleBtn">Schedule Appointment</button>
+                </div>
+                
+                <div id="errorMessage" style="display: none;" class="alert"></div>
+                
+                <div id="loadingIndicator" class="loading">
+                    Loading patient data...
+                </div>
+                
+                <div id="patientDetails" class="patient-details" style="display: none;">
+                    <div class="detail-section">
+                        <h2 class="section-title">Personal Information</h2>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">Full Name</div>
+                                <div class="detail-value" id="patName">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Patient ID</div>
+                                <div class="detail-value" id="patId">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Age</div>
+                                <div class="detail-value" id="patAge">--</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Medicine Taken</div>
+                                <div class="detail-value" id="medTaken">--</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h2 class="section-title">Medical Information</h2>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">Medical Condition</div>
+                                <div class="detail-value" id="medCondition">--</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h2 class="section-title">Medicines</h2>
+                        <div id="medicinesList">
+                            <p>No medicines information available.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h2 class="section-title">Time Medicines</h2>
+                        <div id="timeMedicinesList">
+                            <p>No time medicines information available.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script type ="module" src="firebase.js"></script>
+    
+    <script type="module">
+        
+        // Import the functions you need from the SDKs you need
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxl02vves6dluwcqKGuKNq9f9Sgkszbb8",
+            authDomain: "vishwas-patra.firebaseapp.com",
+            databaseURL: "https://vishwas-patra-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "vishwas-patra",
+            storageBucket: "vishwas-patra.firebasestorage.app",
+            messagingSenderId: "276926459600",
+            appId: "1:276926459600:web:d773473ad7a5152076b8d5"
+        };
+        
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database(app);
+    
+        // Patient ID - Example patient ID
+        const patientId = "asf2025031720310";
+    
+        // DOM elements
+        const userInitials = document.getElementById('userInitials');
+        const userName = document.getElementById('userName');
+        const patientDetails = document.getElementById('patientDetails');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const errorMessage = document.getElementById('errorMessage');
+        const scheduleBtn = document.getElementById('scheduleBtn');
+        
+        const patName = document.getElementById('patName');
+        const patId = document.getElementById('patId');
+        const patAge = document.getElementById('patAge');
+        const medTaken = document.getElementById('medTaken');
+        const medCondition = document.getElementById('medCondition');
+        const medicinesList = document.getElementById('medicinesList');
+        const timeMedicinesList = document.getElementById('timeMedicinesList');
+    
+        function fetchPatientData() {
+            const patientRef = database.ref('patients/' + patientId);
+            patientRef.once('value')
+                .then(snapshot => {
+                    if (snapshot.exists()) {
+                        const patientData = snapshot.val();
+                        displayPatientData(patientData);
+                    } else {
+                        showError("Patient data not found.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching patient data:", error);
+                    showError("Failed to load patient data. Please try again later.");
+                })
+                .finally(() => {
+                    loadingIndicator.style.display = 'none';
+                });
+        }
+    
+        function displayPatientData(data) {
+            patName.textContent = data.pat_name || "Not available";
+            patId.textContent = data.P_id || "Not available";
+            patAge.textContent = data.age || "Not available";
+            medTaken.innerHTML = data.Medicine_taken ? '<span class="status-pill status-true">Yes</span>' : '<span class="status-pill status-false">No</span>';
+            medCondition.textContent = data.medical_cond || "Not available";
+    
+            if (data.pat_name) {
+                const names = data.pat_name.split(' ');
+                const initials = names.map(name => name.charAt(0)).join('');
+                userInitials.textContent = initials.toUpperCase();
+                userName.textContent = data.pat_name;
+            }
+    
+            if (data.Medicines) {
+                displayMedicines(data.Medicines);
+            }
+    
+            if (data.time_medicines) {
+                displayTimeMedicines(data.time_medicines);
+            }
+    
+            patientDetails.style.display = 'flex';
+        }
+    
+        function displayMedicines(medicines) {
+            let html = '<ul style="list-style: none; padding: 0;">';
+            Object.keys(medicines).forEach(key => {
+                html += `<li style="margin-bottom: 10px; padding: 10px; background-color: #f0f7ff; border-radius: 5px;"><strong>${key}</strong>: ${JSON.stringify(medicines[key])}</li>`;
+            });
+            html += '</ul>';
+            medicinesList.innerHTML = html;
+        }
+    
+        function displayTimeMedicines(timeMedicines) {
+            let html = '<ul style="list-style: none; padding: 0;">';
+            Object.keys(timeMedicines).forEach(key => {
+                html += `<li style="margin-bottom: 10px; padding: 10px; background-color: #f0fff7; border-radius: 5px;"><strong>${key}</strong>: ${JSON.stringify(timeMedicines[key])}</li>`;
+            });
+            html += '</ul>';
+            timeMedicinesList.innerHTML = html;
+        }
+    
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            patientDetails.style.display = 'none';
+        }
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            scheduleBtn.addEventListener('click', () => {
+                alert('Schedule appointment feature will be implemented soon!');
+            });
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                    if (this.textContent !== 'Medical Details') {
+                        alert(`The ${this.textContent} page is currently under development.`);
+                    }
+                });
+            });
+            fetchPatientData();
+        });
+    </script>
+    
+</body>
+</html>
