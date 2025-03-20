@@ -200,8 +200,8 @@ class FaceRecog:
             print("❌ Error: Could not open webcam.")
             return False
 
-        self.video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, 160)
-        self.video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 120)
+        self.video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, 180)
+        self.video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
         return True
 
     def process_frame(self, frame):

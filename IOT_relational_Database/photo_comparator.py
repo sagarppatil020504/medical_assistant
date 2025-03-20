@@ -2,7 +2,7 @@ import cv2
 import os
 
 # 🔹 Folder to store patient images
-PATIENTS_FOLDER = "patients"
+PATIENTS_FOLDER = "IOT_relational_Database/patient_photos"
 # records = patient_db.MedicalRecords()
 
 # ✅ Ensure the folder exists

@@ -14,8 +14,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const errorMessage = document.getElementById("errorMessage");
 
     // Ask the user for P_id input
-    const patientId = prompt("Enter Patient ID:");
-
+    const patientId = localStorage.getItem("P_id");
+    
+    if (!patientId) {
+        alert("No Patient ID found. Please log in first.");
+        window.location.href = "login.html"; // Redirect to login if no P_id found
+        return;
+    }
     if (!patientId) {
         alert("No Patient ID provided. Fetching aborted.");
         return;
